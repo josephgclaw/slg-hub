@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import Sidebar from '@/components/Sidebar';
+import Header from '@/components/Header';
+import BottomNav from '@/components/BottomNav';
 
 export const metadata: Metadata = {
   title: 'SLG Hub',
@@ -14,11 +15,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className="bg-zinc-950 text-zinc-100 min-h-screen flex">
-        <Sidebar />
-        <main className="flex-1 ml-56 min-h-screen overflow-auto">
+      <body className="bg-black text-white min-h-screen">
+        <Header />
+        <main className="pb-24">
           {children}
         </main>
+        <BottomNav />
       </body>
     </html>
   );

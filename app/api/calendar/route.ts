@@ -14,11 +14,25 @@ export async function GET() {
     const now = Date.now();
     const endTime = now + 7 * 24 * 60 * 60 * 1000; // +7 days
 
-    // Get list of calendars first
-    const calendarsData = await ghlFetch<CalendarsResponse>(
-      `/calendars/?locationId=${GHL_LOCATION_ID}`
-    );
-    const calendars = calendarsData.calendars || [];
+    // Known calendars (fallback if API doesn't return them)
+    const KNOWN_CALENDARS = [
+      { id: 'h4rBPhq2GUXySpRQ9VpL', name: 'Phone Bookings' },
+      { id: 'by82Q55oI4R1WpIdaFZP', name: 'Trial Bookings' },
+    ];
+
+    // Try to get calendars from API, fall back to known list
+    let calendars: Array<{ id: string; name: string }> = [];
+    try {
+      const calendarsData = await ghlFetch<CalendarsResponse>(
+        `/calendars/?locationId=${GHL_LOCATION_ID}`
+      );
+      calendars = calendarsData.calendars || [];
+    } catch {
+      // fall through
+    }
+    if (calendars.length === 0) {
+      calendars = KNOWN_CALENDARS;
+    }
 
     // Build calendar name map
     const calendarMap: Record<string, string> = {};
