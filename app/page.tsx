@@ -19,21 +19,34 @@ interface StatCardProps {
 
 function StatCard({ title, count, icon, periodLabel }: StatCardProps) {
   return (
-    <div className="bg-zinc-950 border border-zinc-800/60 rounded-2xl overflow-hidden">
-      <div className="bg-zinc-900/50 px-4 py-2 flex items-center gap-1.5">
-        <Clock size={11} className="text-zinc-500" />
-        <span className="text-xs text-zinc-500">{periodLabel}</span>
+    <div
+      className="bg-[#0d0d1a] rounded-2xl overflow-hidden neon-border-red"
+    >
+      {/* Header strip */}
+      <div className="bg-[#12122a] px-4 py-2 flex items-center gap-1.5">
+        <Clock size={11} className="text-[#555577]" />
+        <span className="text-xs text-[#555577] uppercase tracking-wider">{periodLabel}</span>
       </div>
+
+      {/* Body */}
       <div className="p-4">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-white font-medium">{title}</span>
-          <div className="w-8 h-8 rounded-full bg-green-500/10 flex items-center justify-center">
+          <span
+            className="text-sm text-[#8888aa] uppercase tracking-wider"
+            style={{ fontFamily: 'var(--font-cinzel), serif' }}
+          >
+            {title}
+          </span>
+          <div className="w-8 h-8 rounded-full bg-[#ff0844]/10 border border-[#ff0844]/30 flex items-center justify-center">
             {icon}
           </div>
         </div>
-        <div className="text-3xl font-bold text-white">
+        <div
+          className="text-3xl neon-cyan"
+          style={{ fontFamily: 'var(--font-press-start), monospace', lineHeight: 1.2 }}
+        >
           {count === null ? (
-            <span className="text-zinc-600 text-lg">—</span>
+            <span className="text-[#555577] text-lg">—</span>
           ) : (
             count.toLocaleString()
           )}
@@ -59,25 +72,25 @@ export default function HomePage() {
     {
       title: 'New Leads',
       count: loading ? null : (stats?.newLeads ?? null),
-      icon: <UserPlus size={15} className="text-green-400" />,
+      icon: <UserPlus size={15} className="text-[#ff0844]" style={{ filter: 'drop-shadow(0 0 4px #ff0844)' }} />,
       periodLabel: 'Last 30 days',
     },
     {
       title: 'Pipeline',
       count: loading ? null : (stats?.pipelineCount ?? null),
-      icon: <DollarSign size={15} className="text-green-400" />,
+      icon: <DollarSign size={15} className="text-[#ff0844]" style={{ filter: 'drop-shadow(0 0 4px #ff0844)' }} />,
       periodLabel: 'Last 30 days',
     },
     {
-      title: 'New Conversations',
+      title: 'Convos',
       count: loading ? null : (stats?.newConversations ?? null),
-      icon: <MessageSquare size={15} className="text-green-400" />,
+      icon: <MessageSquare size={15} className="text-[#ff0844]" style={{ filter: 'drop-shadow(0 0 4px #ff0844)' }} />,
       periodLabel: 'Today',
     },
     {
-      title: 'Appointments',
+      title: 'Appts',
       count: loading ? null : (stats?.appointmentsToday ?? null),
-      icon: <CalendarDays size={15} className="text-orange-400" />,
+      icon: <CalendarDays size={15} className="text-[#ff0844]" style={{ filter: 'drop-shadow(0 0 4px #ff0844)' }} />,
       periodLabel: 'Today',
     },
   ];
@@ -85,8 +98,13 @@ export default function HomePage() {
   return (
     <div className="px-4 pt-5 pb-4">
       <div className="mb-5">
-        <h1 className="text-xl font-bold text-white">Overview</h1>
-        <p className="text-sm text-zinc-500 mt-0.5">Welcome back, Soul Lab Gym</p>
+        <h1
+          className="text-xl uppercase neon-red flicker"
+          style={{ fontFamily: 'var(--font-cinzel), serif', letterSpacing: '0.1em' }}
+        >
+          Overview
+        </h1>
+        <p className="text-sm text-[#555577] mt-0.5">Welcome back, Soul Lab Gym</p>
       </div>
       <div className="grid grid-cols-2 gap-3">
         {cards.map((card) => (

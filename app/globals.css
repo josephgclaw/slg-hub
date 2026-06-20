@@ -1,31 +1,112 @@
 @import "tailwindcss";
 
+@theme {
+  --color-neon-red: #ff0844;
+  --color-neon-cyan: #00d4ff;
+  --color-neon-purple: #bf5fff;
+  --color-neon-yellow: #f5d020;
+  --color-dark-base: #080810;
+  --color-dark-surface: #0d0d1a;
+  --color-dark-elevated: #12122a;
+}
+
 :root {
-  --background: #000000;
+  --background: #080810;
   --foreground: #ffffff;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 * {
   box-sizing: border-box;
 }
 
-/* Custom scrollbar */
+/* ─── Neon Text Glow ─── */
+.neon-red {
+  color: #ff0844;
+  text-shadow: 0 0 7px #ff0844, 0 0 10px #ff0844, 0 0 21px #ff0844, 0 0 42px #ff0844;
+}
+.neon-cyan {
+  color: #00d4ff;
+  text-shadow: 0 0 7px #00d4ff, 0 0 10px #00d4ff, 0 0 21px #00d4ff;
+}
+.neon-purple {
+  color: #bf5fff;
+  text-shadow: 0 0 7px #bf5fff, 0 0 10px #bf5fff, 0 0 21px #bf5fff;
+}
+
+/* ─── Neon Border Glow ─── */
+.neon-border-red {
+  border: 1px solid #ff0844;
+  box-shadow: 0 0 5px #ff0844, 0 0 10px #ff0844, inset 0 0 5px rgba(255, 8, 68, 0.1);
+}
+.neon-border-cyan {
+  border: 1px solid #00d4ff;
+  box-shadow: 0 0 5px #00d4ff, 0 0 10px #00d4ff, inset 0 0 5px rgba(0, 212, 255, 0.1);
+}
+
+/* ─── Flicker Animation ─── */
+@keyframes flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+  20%, 24%, 55% { opacity: 0.4; }
+}
+.flicker {
+  animation: flicker 4s infinite;
+}
+
+@keyframes neon-pulse {
+  0%, 100% {
+    text-shadow: 0 0 7px #ff0844, 0 0 10px #ff0844, 0 0 21px #ff0844;
+  }
+  50% {
+    text-shadow: 0 0 14px #ff0844, 0 0 20px #ff0844, 0 0 42px #ff0844, 0 0 60px #ff0844;
+  }
+}
+.neon-pulse {
+  animation: neon-pulse 2s ease-in-out infinite;
+}
+
+/* ─── Scanline Overlay ─── */
+.scanlines::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.08) 2px,
+    rgba(0, 0, 0, 0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ─── CRT Vignette ─── */
+.crt-vignette {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.7) 100%);
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* ─── Custom Scrollbar ─── */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
 ::-webkit-scrollbar-track {
-  background: #18181b;
+  background: #080810;
 }
 ::-webkit-scrollbar-thumb {
-  background: #3f3f46;
-  border-radius: 3px;
+  background: #ff0844;
+  border-radius: 2px;
+  box-shadow: 0 0 4px #ff0844;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #52525b;
+  background: #ff0844;
+  box-shadow: 0 0 8px #ff0844;
 }

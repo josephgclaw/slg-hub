@@ -71,37 +71,52 @@ function ConversationList({ onSelect }: ConversationListProps) {
     const matchesTab =
       tab === 'all' ? true :
       tab === 'unread' ? conv.unreadCount > 0 :
-      true; // 'mine' — no assignee filter available in this API, show all
+      true;
     return matchesSearch && matchesTab;
   });
 
   return (
     <div className="flex flex-col h-full">
-      {/* Search */}
+      {/* Page title */}
       <div className="px-4 pt-4 pb-2">
-        <div className="bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 flex items-center gap-2">
-          <Search size={16} className="text-zinc-500 flex-shrink-0" />
+        <h1
+          className="text-lg uppercase neon-red flicker mb-3"
+          style={{ fontFamily: 'var(--font-cinzel), serif', letterSpacing: '0.1em' }}
+        >
+          Inbox
+        </h1>
+        {/* Search */}
+        <div
+          className="bg-[#0d0d1a] border border-[#00d4ff]/30 rounded-xl px-4 py-3 flex items-center gap-2 transition-all"
+          style={{ boxShadow: '0 0 0 transparent' }}
+          onFocus={() => {}}
+        >
+          <Search size={16} className="text-[#00d4ff]/60 flex-shrink-0" />
           <input
             type="text"
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search conversations..."
-            className="flex-1 bg-transparent text-sm text-white placeholder-zinc-500 outline-none"
+            className="flex-1 bg-transparent text-sm text-white placeholder-[#555577] outline-none"
+            style={{ fontFamily: 'var(--font-share-tech), monospace' }}
+            onFocus={e => (e.currentTarget.parentElement!.style.boxShadow = '0 0 10px rgba(0,212,255,0.3)')}
+            onBlur={e => (e.currentTarget.parentElement!.style.boxShadow = 'none')}
           />
         </div>
       </div>
 
       {/* Filter tabs */}
-      <div className="flex px-4 gap-5 border-b border-zinc-900 mb-0">
+      <div className="flex px-4 gap-5 border-b border-[#ff0844]/10 mb-0">
         {tabs.map(t => (
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={`pb-2.5 text-sm font-medium border-b-2 transition-colors ${
+            className={`pb-2.5 text-sm font-medium border-b-2 transition-colors uppercase tracking-wider ${
               tab === t.key
-                ? 'border-green-400 text-green-400'
-                : 'border-transparent text-zinc-500'
+                ? 'border-[#ff0844] neon-red'
+                : 'border-transparent text-[#555577]'
             }`}
+            style={{ fontFamily: 'var(--font-cinzel), serif', fontSize: '11px' }}
           >
             {t.label}
           </button>
@@ -111,16 +126,20 @@ function ConversationList({ onSelect }: ConversationListProps) {
       {/* List */}
       <div className="flex-1 overflow-y-auto">
         {loading && (
-          <div className="flex items-center justify-center py-16 text-zinc-500 text-sm">Loading...</div>
+          <div className="flex items-center justify-center py-16 text-[#555577] text-sm">
+            Loading...
+          </div>
         )}
         {error && (
           <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-            <p className="text-red-400 text-sm">Failed to load conversations</p>
-            <p className="text-zinc-600 text-xs mt-1">{error}</p>
+            <p className="text-[#ff0844] text-sm">Failed to load conversations</p>
+            <p className="text-[#555577] text-xs mt-1">{error}</p>
           </div>
         )}
         {!loading && !error && filtered.length === 0 && (
-          <div className="flex items-center justify-center py-16 text-zinc-500 text-sm">No conversations found</div>
+          <div className="flex items-center justify-center py-16 text-[#555577] text-sm">
+            No conversations found
+          </div>
         )}
         {filtered.map(conv => {
           const name = conv.fullName || conv.contactName || formatPhone(conv.phone) || 'Unknown';
@@ -128,14 +147,16 @@ function ConversationList({ onSelect }: ConversationListProps) {
             <button
               key={conv.id}
               onClick={() => onSelect(conv)}
-              className="w-full text-left flex items-center gap-3 px-4 py-4 border-b border-zinc-900 active:bg-zinc-900"
+              className="w-full text-left flex items-center gap-3 px-4 py-4 border-b border-[#ffffff]/5 hover:bg-[#0d0d1a] transition-colors"
             >
               {/* Avatar */}
               <div className="relative flex-shrink-0">
-                <div className="w-11 h-11 rounded-full bg-zinc-800 flex items-center justify-center text-sm font-semibold text-white">
+                <div
+                  className="w-11 h-11 rounded-full bg-[#12122a] border border-[#ff0844]/30 flex items-center justify-center text-sm font-semibold neon-red"
+                >
                   {getInitials(name)}
                 </div>
-                <div className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-green-500 flex items-center justify-center">
+                <div className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-[#ff0844] flex items-center justify-center" style={{ boxShadow: '0 0 6px #ff0844' }}>
                   <MessageSquare size={8} className="text-black" />
                 </div>
               </div>
@@ -144,14 +165,17 @@ function ConversationList({ onSelect }: ConversationListProps) {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
                   <span className="text-white font-semibold text-sm truncate">{name}</span>
-                  <span className="text-xs text-zinc-500 flex-shrink-0 ml-2">
+                  <span className="text-xs text-[#555577] flex-shrink-0 ml-2">
                     {conv.lastMessageDate ? formatRelative(conv.lastMessageDate) : ''}
                   </span>
                 </div>
                 <div className="flex items-center justify-between mt-0.5">
-                  <p className="text-sm text-zinc-400 truncate">{conv.lastMessageBody || ''}</p>
+                  <p className="text-sm text-[#8888aa] truncate">{conv.lastMessageBody || ''}</p>
                   {conv.unreadCount > 0 && (
-                    <span className="ml-2 flex-shrink-0 bg-green-500 text-black text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    <span
+                      className="ml-2 flex-shrink-0 bg-[#ff0844] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
+                      style={{ boxShadow: '0 0 6px #ff0844' }}
+                    >
                       {conv.unreadCount > 9 ? '9+' : conv.unreadCount}
                     </span>
                   )}
@@ -218,47 +242,48 @@ function ThreadView({ conversation, onBack }: ThreadViewProps) {
 
   return (
     <div className="flex flex-col h-[calc(100vh-56px-96px)]" style={{ height: 'calc(100dvh - 56px - 96px)' }}>
-      {/* Thread header */}
-      <div className="bg-black border-b border-zinc-900 px-4 py-3 flex items-center gap-3">
-        <button onClick={onBack} className="flex items-center gap-1 text-green-400 text-sm">
+      {/* Back + contact header */}
+      <div className="bg-[#080810] border-b border-[#ff0844]/20 px-4 py-3 flex items-center gap-3">
+        <button onClick={onBack} className="flex items-center gap-1 neon-red text-sm">
           <ChevronLeft size={18} />
-          <span>Conversations</span>
+          <span style={{ fontFamily: 'var(--font-cinzel), serif' }}>Back</span>
         </button>
       </div>
 
-      {/* Contact info strip */}
-      <div className="bg-zinc-950 border-b border-zinc-900 px-4 py-3 flex items-center gap-3">
-        <div className="w-9 h-9 rounded-full bg-zinc-800 flex items-center justify-center text-xs font-semibold text-white">
+      {/* Contact strip */}
+      <div className="bg-[#0d0d1a] border-b border-[#ff0844]/10 px-4 py-3 flex items-center gap-3">
+        <div className="w-9 h-9 rounded-full bg-[#12122a] border border-[#ff0844]/30 flex items-center justify-center text-xs font-semibold neon-red">
           {getInitials(name)}
         </div>
         <div>
           <div className="text-white font-semibold text-sm">{name}</div>
           {conversation.phone && (
-            <div className="text-xs text-zinc-500">{formatPhone(conversation.phone)}</div>
+            <div className="text-xs text-[#555577]">{formatPhone(conversation.phone)}</div>
           )}
         </div>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        {loading && <div className="text-center text-zinc-500 text-sm py-8">Loading...</div>}
-        {error && <div className="text-center text-red-400 text-sm py-8">{error}</div>}
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[#080810]">
+        {loading && <div className="text-center text-[#555577] text-sm py-8">Loading...</div>}
+        {error && <div className="text-center text-[#ff0844] text-sm py-8">{error}</div>}
         {!loading && !error && messages.length === 0 && (
-          <div className="text-center text-zinc-500 text-sm py-8">No messages yet</div>
+          <div className="text-center text-[#555577] text-sm py-8">No messages yet</div>
         )}
         {messages.map(msg => {
           const out = msg.direction === 'outbound';
           return (
             <div key={msg.id} className={`flex ${out ? 'justify-end' : 'justify-start'}`}>
               <div
-                className={`max-w-[75%] px-4 py-2.5 text-sm ${
+                className={`max-w-[75%] px-4 py-2.5 text-sm rounded-2xl ${
                   out
-                    ? 'bg-green-600 text-white rounded-2xl rounded-br-sm'
-                    : 'bg-zinc-800 text-white rounded-2xl rounded-bl-sm'
+                    ? 'bg-[#ff0844]/20 border border-[#ff0844]/40 text-white rounded-br-sm'
+                    : 'bg-[#12122a] border border-[#ffffff]/10 text-[#cccccc] rounded-bl-sm'
                 }`}
+                style={out ? { boxShadow: '0 0 8px rgba(255,8,68,0.2)' } : undefined}
               >
                 <p className="whitespace-pre-wrap break-words">{msg.body}</p>
-                <p className={`text-xs mt-1 ${out ? 'text-green-200' : 'text-zinc-500'}`}>
+                <p className={`text-xs mt-1 ${out ? 'text-[#ff0844]/60' : 'text-[#555577]'}`}>
                   {formatTime(msg.dateAdded)}
                 </p>
               </div>
@@ -268,8 +293,8 @@ function ThreadView({ conversation, onBack }: ThreadViewProps) {
       </div>
 
       {/* Input */}
-      <div className="bg-black border-t border-zinc-900 px-4 py-3">
-        {sendError && <p className="text-red-400 text-xs mb-2">{sendError}</p>}
+      <div className="bg-[#080810] border-t border-[#ff0844]/20 px-4 py-3">
+        {sendError && <p className="text-[#ff0844] text-xs mb-2">{sendError}</p>}
         <div className="flex items-center gap-3">
           <input
             type="text"
@@ -277,14 +302,21 @@ function ThreadView({ conversation, onBack }: ThreadViewProps) {
             onChange={e => setText(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter') handleSend(); }}
             placeholder="Message..."
-            className="flex-1 bg-zinc-950 border border-zinc-800 rounded-full px-4 py-3 text-sm text-white placeholder-zinc-500 outline-none focus:border-green-500/50"
+            className="flex-1 bg-[#0d0d1a] border border-[#ff0844]/30 rounded-full px-4 py-3 text-sm text-white placeholder-[#555577] outline-none transition-all"
+            style={{ fontFamily: 'var(--font-share-tech), monospace' }}
+            onFocus={e => (e.currentTarget.style.boxShadow = '0 0 10px rgba(255,8,68,0.3)')}
+            onBlur={e => (e.currentTarget.style.boxShadow = 'none')}
           />
           <button
             onClick={handleSend}
             disabled={!text.trim() || sending}
-            className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center disabled:opacity-40 flex-shrink-0"
+            className="w-10 h-10 rounded-full flex items-center justify-center disabled:opacity-40 flex-shrink-0 transition-all"
+            style={{
+              background: '#ff0844',
+              boxShadow: '0 0 10px #ff0844, 0 0 20px #ff0844',
+            }}
           >
-            <Send size={16} className="text-black" />
+            <Send size={16} className="text-white" />
           </button>
         </div>
       </div>
